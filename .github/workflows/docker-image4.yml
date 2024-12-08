@@ -1,0 +1,33 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Checkout del código del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Paso 2: Login a Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: karlostcp
+          password: ${{ secrets.MI_PTA_DOCKERHUB2 }}
+
+      # Paso 3: Crear la imagen de Docker
+      - name: Build Docker Image
+        run: |
+          docker build -t karlostcp/ubuntu-image:latest .
+
+      # Paso 4: Subir la imagen a Docker Hub
+      - name: Push Docker Image
+        run: |
+          docker push karlostcp/ubuntu-image:latest
